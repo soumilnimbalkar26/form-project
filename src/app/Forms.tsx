@@ -4,7 +4,11 @@ import FormCards from "./components/FormCards";
 
 export default function Forms() {
   const formCards = [
-    { title: "Membership Form", subtitle: "", route: "/forms/MembershipForm" },
+    {
+      title: "Membership Form",
+      subtitle: "",
+      route: "/forms/NewMembershipForm",
+    },
     { title: "Center Form", subtitle: "", route: "/forms/CenterForm" },
     { title: "Trainer Form", subtitle: "", route: "/forms/TrainerForm" },
     { title: "Vendor Form", subtitle: "", route: "/forms/VendorForm" },
