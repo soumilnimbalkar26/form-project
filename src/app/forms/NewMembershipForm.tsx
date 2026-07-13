@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const MembershipForm = () => {
+const NewMembershipForm = () => {
   return (
     <SafeAreaView style={style.container}>
       <View style={style.scrollContent}>
@@ -13,7 +13,7 @@ const MembershipForm = () => {
   );
 };
 
-export default MembershipForm;
+export default NewMembershipForm;
 
 const style = StyleSheet.create({
   container: {
