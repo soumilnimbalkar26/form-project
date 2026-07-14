@@ -9,6 +9,7 @@ import {
     View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import SectionHeader from "../components/FormComponents/SectionHeader";
 
 type Gender = "Male" | "Female" | "Other";
 type ProfessionType =
@@ -447,12 +448,6 @@ const NewMembershipForm = () => {
     </SafeAreaView>
   );
 };
-
-const SectionHeader = ({ title }: { title: string }) => (
-  <View style={style.sectionHeaderWrapper}>
-    <Text style={style.sectionHeaderText}>{title}</Text>
-  </View>
-);
 
 const FieldLabel = ({ label }: { label: string }) => (
   <Text style={style.fieldLabel}>{label}</Text>
