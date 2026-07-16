@@ -27,10 +27,6 @@ export default function Index() {
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
 
-        <Text style={styles.footer}>
-          Dummy application for learning React Native with Expo.
-        </Text>
-
         <Button
           title="Preview form cards"
           color="#EA580C"
