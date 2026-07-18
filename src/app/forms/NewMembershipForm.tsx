@@ -144,7 +144,8 @@ const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 async function submitMembershipApplication(payload: MembershipFormValues) {
   const response = await fetch(
-    `${API_BASE_URL}/api/memberships/membershipform`,
+    // `${API_BASE_URL}/api/memberships/membershipform`,
+    `${API_BASE_URL}/api/membershipform`,
     {
       method: "POST",
       headers: {
