@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "form-project-2",
-    "slug": "form-project-2",
+    "slug": "form-project",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -17,7 +17,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.shaggy.borkade.formproject"
     },
     "web": {
       "output": "static",
@@ -41,6 +42,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a99bab15-0617-43cc-88d3-3f27cd8a2445"
+      }
+    },
+    "owner": "shaggy.borkade"
   }
 }
