@@ -30,27 +30,37 @@ export default function Login() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.title}>Welcome Back 👋</Text>
+        <View style={styles.iconCircle}>
+          <Text style={styles.iconEmoji}>👋</Text>
+        </View>
+
+        <Text style={styles.title}>Welcome Back</Text>
         <Text style={styles.subtitle}>Login to continue</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#9A3412"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
-        />
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>EMAIL</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your email"
+            placeholderTextColor="#4A4A62"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#9A3412"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>PASSWORD</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your password"
+            placeholderTextColor="#4A4A62"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
@@ -68,62 +78,95 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#FFF7ED",
+    backgroundColor: "#0F0F13",
     paddingHorizontal: 20,
   },
   card: {
-    backgroundColor: "#fff",
-    padding: 24,
-    borderRadius: 16,
-    shadowColor: "#431407",
+    backgroundColor: "#1A1A24",
+    padding: 28,
+    borderRadius: 20,
+    shadowColor: "#000000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 8,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 10,
+    borderWidth: 1,
+    borderColor: "#2A2A3A",
+  },
+  iconCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#22222E",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+  iconEmoji: {
+    fontSize: 26,
   },
   title: {
     fontSize: 28,
-    fontWeight: "700",
-    color: "#431407",
+    fontWeight: "800",
+    color: "#FFFFFF",
     marginBottom: 8,
     textAlign: "center",
+    letterSpacing: -0.3,
   },
   subtitle: {
-    fontSize: 16,
-    color: "#9A3412",
+    fontSize: 15,
+    color: "#A0A0B8",
     textAlign: "center",
-    marginBottom: 30,
+    marginBottom: 32,
+  },
+  inputGroup: {
+    marginBottom: 18,
+  },
+  inputLabel: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#6B6B82",
+    letterSpacing: 1.2,
+    marginBottom: 8,
   },
   input: {
-    height: 50,
+    height: 52,
     borderWidth: 1,
-    borderColor: "#FED7AA",
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-    backgroundColor: "#FFFAF5",
-    color: "#431407",
+    borderColor: "#2A2A3A",
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    backgroundColor: "#16161F",
+    color: "#FFFFFF",
+    fontSize: 15,
   },
   button: {
-    backgroundColor: "#F97316",
-    height: 50,
-    borderRadius: 10,
+    backgroundColor: "#6C63FF",
+    height: 54,
+    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 8,
+    shadowColor: "#6C63FF",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 8,
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
+    color: "#FFFFFF",
+    fontSize: 17,
+    fontWeight: "700",
+    letterSpacing: 0.5,
   },
   forgotPassword: {
     marginTop: 20,
-    color: "#F97316",
+    color: "#6C63FF",
     textAlign: "center",
-    fontWeight: "500",
+    fontWeight: "600",
+    fontSize: 14,
   },
 });

@@ -154,7 +154,7 @@ function RadioGroupField<T extends string>({
         return (
           <Pressable
             key={option}
-            style={style.radioOption}
+            style={[style.radioOption, isSelected && style.radioOptionSelected]}
             onPress={() => onChange(option)}
           >
             <View
@@ -165,7 +165,7 @@ function RadioGroupField<T extends string>({
             >
               {isSelected && <View style={style.radioInnerDot} />}
             </View>
-            <Text style={style.radioLabel}>{option}</Text>
+            <Text style={[style.radioLabel, isSelected && style.radioLabelSelected]}>{option}</Text>
           </Pressable>
         );
       })}
@@ -235,7 +235,7 @@ const VendorForm = () => {
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder="Enter full name"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
             />
           )}
         />
@@ -252,7 +252,7 @@ const VendorForm = () => {
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder="Enter father's / spouse name"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
             />
           )}
         />
@@ -263,7 +263,7 @@ const VendorForm = () => {
           onPress={() => setShowDobPicker(true)}
         >
           <Text style={dob ? style.dateText : style.placeholder}>
-            {dob ? dob.toLocaleDateString("en-GB") : "Select Date of Birth"}
+            {dob ? `📅  ${dob.toLocaleDateString("en-GB")}` : "📅  Select Date of Birth"}
           </Text>
         </Pressable>
 
@@ -324,7 +324,7 @@ const VendorForm = () => {
               onChangeText={(text) => onChange(text.replace(/[^0-9]/g, ""))}
               onBlur={onBlur}
               placeholder="Enter mobile number"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
               keyboardType="phone-pad"
               maxLength={10}
             />
@@ -349,7 +349,7 @@ const VendorForm = () => {
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder="Enter email address"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
               keyboardType="email-address"
               autoCapitalize="none"
             />
@@ -371,7 +371,7 @@ const VendorForm = () => {
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder="Enter residential address"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
               multiline
               numberOfLines={3}
             />
@@ -391,7 +391,7 @@ const VendorForm = () => {
                   onChangeText={onChange}
                   onBlur={onBlur}
                   placeholder="City"
-                  placeholderTextColor="#B0A69A"
+                  placeholderTextColor="#4A4A62"
                 />
               )}
             />
@@ -408,7 +408,7 @@ const VendorForm = () => {
                   onChangeText={onChange}
                   onBlur={onBlur}
                   placeholder="State"
-                  placeholderTextColor="#B0A69A"
+                  placeholderTextColor="#4A4A62"
                 />
               )}
             />
@@ -432,7 +432,7 @@ const VendorForm = () => {
               onChangeText={(text) => onChange(text.replace(/[^0-9]/g, ""))}
               onBlur={onBlur}
               placeholder="Enter PIN code"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
               keyboardType="number-pad"
               maxLength={6}
             />
@@ -454,7 +454,7 @@ const VendorForm = () => {
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder="Enter education"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
             />
           )}
         />
@@ -470,7 +470,7 @@ const VendorForm = () => {
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder="Enter occupation"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
             />
           )}
         />
@@ -486,7 +486,7 @@ const VendorForm = () => {
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder="Enter business name"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
             />
           )}
         />
@@ -516,7 +516,7 @@ const VendorForm = () => {
               onChangeText={(text) => onChange(text.replace(/[^0-9]/g, ""))}
               onBlur={onBlur}
               placeholder="Enter approx annual income"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
               keyboardType="numeric"
             />
           )}
@@ -534,7 +534,7 @@ const VendorForm = () => {
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder="Share your reason"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
               multiline
               numberOfLines={4}
             />
@@ -553,7 +553,7 @@ const VendorForm = () => {
               onChangeText={onChange}
               onBlur={onBlur}
               placeholder="List your skills / interests"
-              placeholderTextColor="#B0A69A"
+              placeholderTextColor="#4A4A62"
               multiline
               numberOfLines={3}
             />
@@ -588,82 +588,88 @@ export default VendorForm;
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF7ED",
+    backgroundColor: "#0F0F13",
   },
   scrollContent: {
     flex: 1,
   },
   scrollContentContainer: {
-    padding: 16,
-    paddingBottom: 40,
+    padding: 20,
+    paddingBottom: 48,
   },
   orgTitle: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#7C2D12",
-    marginBottom: 2,
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#6C63FF",
+    marginBottom: 4,
     textAlign: "center",
-    letterSpacing: 0.5,
+    letterSpacing: 2,
+    textTransform: "uppercase",
   },
   title: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#7C2D12",
-    marginBottom: 12,
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#FFFFFF",
+    marginBottom: 8,
     textAlign: "center",
+    letterSpacing: 0.3,
   },
   sectionHeaderWrapper: {
-    marginTop: 20,
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#FDBA74",
-    paddingBottom: 6,
+    marginTop: 28,
+    marginBottom: 14,
+    borderLeftWidth: 3,
+    borderLeftColor: "#6C63FF",
+    paddingLeft: 12,
+    paddingVertical: 4,
   },
   sectionHeaderText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "700",
-    color: "#9A3412",
+    color: "#FFFFFF",
+    letterSpacing: 0.2,
   },
   fieldLabel: {
     fontSize: 13,
-    fontWeight: "500",
-    color: "#78716C",
-    marginTop: 10,
-    marginBottom: 4,
+    fontWeight: "600",
+    color: "#A0A0B8",
+    marginTop: 16,
+    marginBottom: 6,
+    letterSpacing: 0.4,
+    textTransform: "uppercase",
   },
   errorText: {
     fontSize: 12,
-    color: "#DC2626",
+    color: "#FF6B6B",
     marginTop: 4,
   },
   input: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#16161F",
     borderWidth: 1,
-    borderColor: "#FED7AA",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: "#1C1917",
+    borderColor: "#2A2A3A",
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    fontSize: 15,
+    color: "#FFFFFF",
   },
   dateInput: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#16161F",
     borderWidth: 1,
-    borderColor: "#FED7AA",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    borderColor: "#2A2A3A",
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
   },
   dateText: {
-    fontSize: 14,
-    color: "#1C1917",
+    fontSize: 15,
+    color: "#FFFFFF",
   },
   placeholder: {
-    fontSize: 14,
-    color: "#B0A69A",
+    fontSize: 15,
+    color: "#4A4A62",
   },
   textArea: {
-    minHeight: 80,
+    minHeight: 100,
     textAlignVertical: "top",
   },
   row: {
@@ -676,53 +682,69 @@ const style = StyleSheet.create({
   radioGroup: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 16,
+    gap: 10,
     marginTop: 4,
   },
   radioGroupWrap: {
-    gap: 12,
+    gap: 8,
   },
   radioOption: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    backgroundColor: "transparent",
+    marginBottom: 4,
+  },
+  radioOptionSelected: {
+    backgroundColor: "#1A1A2E",
   },
   radioCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     borderWidth: 2,
-    borderColor: "#FB923C",
+    borderColor: "#4A4A62",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 6,
+    marginRight: 8,
   },
   radioCircleSelected: {
-    borderColor: "#EA580C",
+    borderColor: "#6C63FF",
   },
   radioInnerDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: "#EA580C",
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "#6C63FF",
   },
   radioLabel: {
     fontSize: 14,
-    color: "#292524",
+    color: "#A0A0B8",
+  },
+  radioLabelSelected: {
+    color: "#E0E0EE",
   },
   submitButton: {
-    backgroundColor: "#EA580C",
-    borderRadius: 10,
-    paddingVertical: 14,
+    backgroundColor: "#6C63FF",
+    borderRadius: 16,
+    paddingVertical: 16,
     alignItems: "center",
-    marginTop: 24,
+    marginTop: 32,
+    shadowColor: "#6C63FF",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 8,
   },
   submitButtonDisabled: {
-    opacity: 0.6,
+    opacity: 0.5,
   },
   submitButtonText: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "700",
+    letterSpacing: 0.5,
   },
 });
