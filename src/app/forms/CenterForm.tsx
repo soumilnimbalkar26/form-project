@@ -1,4 +1,8 @@
+import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { LinearGradient } from "expo-linear-gradient";
+import { Stack, router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -10,9 +14,11 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import SuccessModal from "../components/FormComponents/SuccessModal";
 
 // ----------------------------------------------------------------------------------
 // Types
@@ -180,6 +186,7 @@ function RadioGroupField<T extends string>({
 const CenterForm = () => {
   const [showDobPicker, setShowDobPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const {
     control,
@@ -198,7 +205,7 @@ const CenterForm = () => {
     try {
       const result = await submitCenterApplication(data);
       console.log("Center Form Submitted:", data, "API response:", result);
-      Alert.alert("Success", "Center application submitted successfully.");
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Center form submission failed:", error);
       Alert.alert(
@@ -211,371 +218,396 @@ const CenterForm = () => {
   };
 
   return (
-    <SafeAreaView style={style.container}>
-      <ScrollView
-        style={style.scrollContent}
-        contentContainerStyle={style.scrollContentContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={style.orgTitle}>MISSION UDYOJAK FOUNDATION</Text>
-        <Text style={style.title}>Center Application Form</Text>
+    <LinearGradient
+      colors={["#1b0c06", "#3e1607", "#8d340e", "#b84714"]}
+      locations={[0, 0.35, 0.75, 1.0]}
+      style={style.container}
+    >
+      <Stack.Screen options={{ headerShown: false }} />
+      <StatusBar style="light" />
 
-        {/* 1. Personal Details */}
-        <SectionHeader title="1. Personal Details" />
+      <SuccessModal
+        visible={showSuccessModal}
+        formTitle="center"
+        onClose={() => setShowSuccessModal(false)}
+      />
 
-        <FieldLabel label="Full Name" />
-        <Controller
-          control={control}
-          name="fullName"
-          rules={{ required: "Full name is required" }}
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={style.input}
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter full name"
-              placeholderTextColor="#B0A69A"
-            />
-          )}
-        />
-        <ErrorText message={errors.fullName?.message} />
-
-        <FieldLabel label="Father's / Spouse Name" />
-        <Controller
-          control={control}
-          name="fatherSpouseName"
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={style.input}
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter father's / spouse name"
-              placeholderTextColor="#B0A69A"
-            />
-          )}
-        />
-
-        <FieldLabel label="Date of Birth" />
-        <Pressable
-          style={style.dateInput}
-          onPress={() => setShowDobPicker(true)}
+      <SafeAreaView style={style.safeArea}>
+        <ScrollView
+          style={style.scrollContent}
+          contentContainerStyle={style.scrollContentContainer}
+          showsVerticalScrollIndicator={false}
         >
-          <Text style={dob ? style.dateText : style.placeholder}>
-            {dob ? dob.toLocaleDateString("en-GB") : "Select Date of Birth"}
-          </Text>
-        </Pressable>
+          {/* Top Header Navigation */}
+          <View style={style.headerNav}>
+            <TouchableOpacity
+              style={style.backButton}
+              onPress={() => router.back()}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="chevron-back" size={20} color="#FFFFFF" />
+            </TouchableOpacity>
+            <Text style={style.orgTitle}>MISSION UDYOJAK FOUNDATION</Text>
+            <Text style={style.title}>Center Application Form</Text>
+          </View>
 
-        {showDobPicker && (
+          {/* 1. Personal Details */}
+          <SectionHeader title="1. Personal Details" />
+
+          <FieldLabel label="Full Name" />
           <Controller
             control={control}
-            name="dob"
-            render={({ field: { value, onChange } }) => (
-              <DateTimePicker
-                value={value || new Date()}
-                mode="date"
-                display={Platform.OS === "ios" ? "spinner" : "default"}
-                maximumDate={new Date()}
-                onChange={(event, selectedDate) => {
-                  setShowDobPicker(Platform.OS === "ios");
-                  if (event.type === "set" && selectedDate) {
-                    onChange(selectedDate);
-                  }
-                  if (Platform.OS !== "ios") {
-                    setShowDobPicker(false);
-                  }
-                }}
+            name="fullName"
+            rules={{ required: "Full name is required" }}
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={style.input}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder="Enter full name"
+                placeholderTextColor="#a8998d"
               />
             )}
           />
-        )}
+          <ErrorText message={errors.fullName?.message} />
 
-        <FieldLabel label="Gender" />
-        <Controller
-          control={control}
-          name="gender"
-          rules={{ required: "Please select a gender" }}
-          render={({ field: { value, onChange } }) => (
-            <RadioGroupField
-              options={GENDER_OPTIONS}
-              value={value}
-              onChange={onChange}
-            />
-          )}
-        />
-        <ErrorText message={errors.gender?.message} />
+          <FieldLabel label="Father's / Spouse Name" />
+          <Controller
+            control={control}
+            name="fatherSpouseName"
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={style.input}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder="Enter father's / spouse name"
+                placeholderTextColor="#a8998d"
+              />
+            )}
+          />
 
-        <FieldLabel label="Mobile Number" />
-        <Controller
-          control={control}
-          name="mobileNumber"
-          rules={{
-            required: "Mobile number is required",
-            pattern: {
-              value: /^[0-9]{10}$/,
-              message: "Enter a valid 10-digit mobile number",
-            },
-          }}
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={style.input}
-              value={value}
-              onChangeText={(text) => onChange(text.replace(/[^0-9]/g, ""))}
-              onBlur={onBlur}
-              placeholder="Enter mobile number"
-              placeholderTextColor="#B0A69A"
-              keyboardType="phone-pad"
-              maxLength={10}
-            />
-          )}
-        />
-        <ErrorText message={errors.mobileNumber?.message} />
+          <FieldLabel label="Date of Birth" />
+          <Pressable
+            style={style.dateInput}
+            onPress={() => setShowDobPicker(true)}
+          >
+            <Text style={dob ? style.dateText : style.placeholder}>
+              {dob ? dob.toLocaleDateString("en-GB") : "Select Date of Birth"}
+            </Text>
+          </Pressable>
 
-        <FieldLabel label="Email ID" />
-        <Controller
-          control={control}
-          name="email"
-          rules={{
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Enter a valid email address",
-            },
-          }}
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={style.input}
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter email address"
-              placeholderTextColor="#B0A69A"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-          )}
-        />
-        <ErrorText message={errors.email?.message} />
-
-        {/* 2. Address Details */}
-        <SectionHeader title="2. Address Details" />
-
-        <FieldLabel label="Residential Address" />
-        <Controller
-          control={control}
-          name="residentialAddress"
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={[style.input, style.textArea]}
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter residential address"
-              placeholderTextColor="#B0A69A"
-              multiline
-              numberOfLines={3}
-            />
-          )}
-        />
-
-        <View style={style.row}>
-          <View style={style.rowItem}>
-            <FieldLabel label="City" />
+          {showDobPicker && (
             <Controller
               control={control}
-              name="city"
-              render={({ field: { value, onChange, onBlur } }) => (
-                <TextInput
-                  style={style.input}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder="City"
-                  placeholderTextColor="#B0A69A"
+              name="dob"
+              render={({ field: { value, onChange } }) => (
+                <DateTimePicker
+                  value={value || new Date()}
+                  mode="date"
+                  display={Platform.OS === "ios" ? "spinner" : "default"}
+                  maximumDate={new Date()}
+                  onChange={(event, selectedDate) => {
+                    setShowDobPicker(Platform.OS === "ios");
+                    if (event.type === "set" && selectedDate) {
+                      onChange(selectedDate);
+                    }
+                    if (Platform.OS !== "ios") {
+                      setShowDobPicker(false);
+                    }
+                  }}
                 />
               )}
             />
+          )}
+
+          <FieldLabel label="Gender" />
+          <Controller
+            control={control}
+            name="gender"
+            rules={{ required: "Please select a gender" }}
+            render={({ field: { value, onChange } }) => (
+              <RadioGroupField
+                options={GENDER_OPTIONS}
+                value={value}
+                onChange={onChange}
+              />
+            )}
+          />
+          <ErrorText message={errors.gender?.message} />
+
+          <FieldLabel label="Mobile Number" />
+          <Controller
+            control={control}
+            name="mobileNumber"
+            rules={{
+              required: "Mobile number is required",
+              pattern: {
+                value: /^[0-9]{10}$/,
+                message: "Enter a valid 10-digit mobile number",
+              },
+            }}
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={style.input}
+                value={value}
+                onChangeText={(text) => onChange(text.replace(/[^0-9]/g, ""))}
+                onBlur={onBlur}
+                placeholder="Enter mobile number"
+                placeholderTextColor="#a8998d"
+                keyboardType="phone-pad"
+                maxLength={10}
+              />
+            )}
+          />
+          <ErrorText message={errors.mobileNumber?.message} />
+
+          <FieldLabel label="Email ID" />
+          <Controller
+            control={control}
+            name="email"
+            rules={{
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Enter a valid email address",
+              },
+            }}
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={style.input}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder="Enter email address"
+                placeholderTextColor="#a8998d"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            )}
+          />
+          <ErrorText message={errors.email?.message} />
+
+          {/* 2. Address Details */}
+          <SectionHeader title="2. Address Details" />
+
+          <FieldLabel label="Residential Address" />
+          <Controller
+            control={control}
+            name="residentialAddress"
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={[style.input, style.textArea]}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder="Enter residential address"
+                placeholderTextColor="#a8998d"
+                multiline
+                numberOfLines={3}
+              />
+            )}
+          />
+
+          <View style={style.row}>
+            <View style={style.rowItem}>
+              <FieldLabel label="City" />
+              <Controller
+                control={control}
+                name="city"
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <TextInput
+                    style={style.input}
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="City"
+                    placeholderTextColor="#a8998d"
+                  />
+                )}
+              />
+            </View>
+            <View style={style.rowItem}>
+              <FieldLabel label="State" />
+              <Controller
+                control={control}
+                name="state"
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <TextInput
+                    style={style.input}
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="State"
+                    placeholderTextColor="#a8998d"
+                  />
+                )}
+              />
+            </View>
           </View>
-          <View style={style.rowItem}>
-            <FieldLabel label="State" />
-            <Controller
-              control={control}
-              name="state"
-              render={({ field: { value, onChange, onBlur } }) => (
-                <TextInput
-                  style={style.input}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder="State"
-                  placeholderTextColor="#B0A69A"
-                />
-              )}
-            />
-          </View>
-        </View>
 
-        <FieldLabel label="PIN Code" />
-        <Controller
-          control={control}
-          name="pinCode"
-          rules={{
-            pattern: {
-              value: /^[0-9]{6}$/,
-              message: "Enter a valid 6-digit PIN code",
-            },
-          }}
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={style.input}
-              value={value}
-              onChangeText={(text) => onChange(text.replace(/[^0-9]/g, ""))}
-              onBlur={onBlur}
-              placeholder="Enter PIN code"
-              placeholderTextColor="#B0A69A"
-              keyboardType="number-pad"
-              maxLength={6}
-            />
-          )}
-        />
-        <ErrorText message={errors.pinCode?.message} />
+          <FieldLabel label="PIN Code" />
+          <Controller
+            control={control}
+            name="pinCode"
+            rules={{
+              pattern: {
+                value: /^[0-9]{6}$/,
+                message: "Enter a valid 6-digit PIN code",
+              },
+            }}
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={style.input}
+                value={value}
+                onChangeText={(text) => onChange(text.replace(/[^0-9]/g, ""))}
+                onBlur={onBlur}
+                placeholder="Enter PIN code"
+                placeholderTextColor="#a8998d"
+                keyboardType="number-pad"
+                maxLength={6}
+              />
+            )}
+          />
+          <ErrorText message={errors.pinCode?.message} />
 
-        {/* 3. Professional Details */}
-        <SectionHeader title="3. Professional Details" />
+          {/* 3. Professional Details */}
+          <SectionHeader title="3. Professional Details" />
 
-        <FieldLabel label="Education" />
-        <Controller
-          control={control}
-          name="education"
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={style.input}
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter education"
-              placeholderTextColor="#B0A69A"
-            />
-          )}
-        />
+          <FieldLabel label="Education" />
+          <Controller
+            control={control}
+            name="education"
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={style.input}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder="Enter education"
+                placeholderTextColor="#a8998d"
+              />
+            )}
+          />
 
-        <FieldLabel label="Occupation" />
-        <Controller
-          control={control}
-          name="occupation"
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={style.input}
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter occupation"
-              placeholderTextColor="#B0A69A"
-            />
-          )}
-        />
+          <FieldLabel label="Occupation" />
+          <Controller
+            control={control}
+            name="occupation"
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={style.input}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder="Enter occupation"
+                placeholderTextColor="#a8998d"
+              />
+            )}
+          />
 
-        <FieldLabel label="Business Name (if any)" />
-        <Controller
-          control={control}
-          name="businessName"
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={style.input}
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter business name"
-              placeholderTextColor="#B0A69A"
-            />
-          )}
-        />
+          <FieldLabel label="Business Name (if any)" />
+          <Controller
+            control={control}
+            name="businessName"
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={style.input}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder="Enter business name"
+                placeholderTextColor="#a8998d"
+              />
+            )}
+          />
 
-        <FieldLabel label="Type" />
-        <Controller
-          control={control}
-          name="professionType"
-          render={({ field: { value, onChange } }) => (
-            <RadioGroupField
-              options={PROFESSION_TYPE_OPTIONS}
-              value={value}
-              onChange={onChange}
-              wrap
-            />
-          )}
-        />
+          <FieldLabel label="Type" />
+          <Controller
+            control={control}
+            name="professionType"
+            render={({ field: { value, onChange } }) => (
+              <RadioGroupField
+                options={PROFESSION_TYPE_OPTIONS}
+                value={value}
+                onChange={onChange}
+                wrap
+              />
+            )}
+          />
 
-        <FieldLabel label="Annual Income (Approx)" />
-        <Controller
-          control={control}
-          name="annualIncome"
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={style.input}
-              value={value}
-              onChangeText={(text) => onChange(text.replace(/[^0-9]/g, ""))}
-              onBlur={onBlur}
-              placeholder="Enter approx annual income"
-              placeholderTextColor="#B0A69A"
-              keyboardType="numeric"
-            />
-          )}
-        />
+          <FieldLabel label="Annual Income (Approx)" />
+          <Controller
+            control={control}
+            name="annualIncome"
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={style.input}
+                value={value}
+                onChangeText={(text) => onChange(text.replace(/[^0-9]/g, ""))}
+                onBlur={onBlur}
+                placeholder="Enter approx annual income"
+                placeholderTextColor="#a8998d"
+                keyboardType="numeric"
+              />
+            )}
+          />
 
-        {/* 5. Reason to join */}
-        <SectionHeader title="5. Why do you want to join Mission Udyojak Foundation?" />
-        <Controller
-          control={control}
-          name="reasonToJoin"
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={[style.input, style.textArea]}
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Share your reason"
-              placeholderTextColor="#B0A69A"
-              multiline
-              numberOfLines={4}
-            />
-          )}
-        />
+          {/* 5. Reason to join */}
+          <SectionHeader title="5. Why do you want to join Mission Udyojak Foundation?" />
+          <Controller
+            control={control}
+            name="reasonToJoin"
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={[style.input, style.textArea]}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder="Share your reason"
+                placeholderTextColor="#a8998d"
+                multiline
+                numberOfLines={4}
+              />
+            )}
+          />
 
-        {/* 6. Skills / Interests */}
-        <SectionHeader title="6. Skills / Interests" />
-        <Controller
-          control={control}
-          name="skillsInterests"
-          render={({ field: { value, onChange, onBlur } }) => (
-            <TextInput
-              style={[style.input, style.textArea]}
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="List your skills / interests"
-              placeholderTextColor="#B0A69A"
-              multiline
-              numberOfLines={3}
-            />
-          )}
-        />
+          {/* 6. Skills / Interests */}
+          <SectionHeader title="6. Skills / Interests" />
+          <Controller
+            control={control}
+            name="skillsInterests"
+            render={({ field: { value, onChange, onBlur } }) => (
+              <TextInput
+                style={[style.input, style.textArea]}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholder="List your skills / interests"
+                placeholderTextColor="#a8998d"
+                multiline
+                numberOfLines={3}
+              />
+            )}
+          />
 
-        <Pressable
-          style={[
-            style.submitButton,
-            isSubmitting && style.submitButtonDisabled,
-          ]}
-          onPress={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <ActivityIndicator color="#FFFFFF" />
-          ) : (
-            <Text style={style.submitButtonText}>Submit Application</Text>
-          )}
-        </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+          <Pressable
+            style={[
+              style.submitButton,
+              isSubmitting && style.submitButtonDisabled,
+            ]}
+            onPress={handleSubmit(onSubmit)}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <ActivityIndicator color="#1a0e08" />
+            ) : (
+              <Text style={style.submitButtonText}>Submit Application</Text>
+            )}
+          </Pressable>
+        </ScrollView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
@@ -588,82 +620,95 @@ export default CenterForm;
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF7ED",
+  },
+  safeArea: {
+    flex: 1,
   },
   scrollContent: {
     flex: 1,
   },
   scrollContentContainer: {
-    padding: 16,
+    paddingHorizontal: 20,
+    paddingTop: 12,
     paddingBottom: 40,
   },
+  headerNav: {
+    marginBottom: 16,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.12)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
   orgTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "800",
-    color: "#7C2D12",
+    color: "#ef833b",
     marginBottom: 2,
-    textAlign: "center",
-    letterSpacing: 0.5,
+    letterSpacing: 1.5,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#7C2D12",
-    marginBottom: 12,
-    textAlign: "center",
+    fontSize: 26,
+    fontWeight: "800",
+    color: "#FFFFFF",
+    marginBottom: 4,
   },
   sectionHeaderWrapper: {
-    marginTop: 20,
-    marginBottom: 10,
+    marginTop: 24,
+    marginBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#FDBA74",
+    borderBottomColor: "rgba(249, 115, 22, 0.35)",
     paddingBottom: 6,
   },
   sectionHeaderText: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "700",
-    color: "#9A3412",
+    color: "#f97316",
   },
   fieldLabel: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: "#78716C",
-    marginTop: 10,
-    marginBottom: 4,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#e2d5cd",
+    marginTop: 12,
+    marginBottom: 6,
   },
   errorText: {
     fontSize: 12,
-    color: "#DC2626",
+    color: "#f87171",
     marginTop: 4,
   },
   input: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
     borderWidth: 1,
-    borderColor: "#FED7AA",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: "#1C1917",
+    borderColor: "rgba(255, 255, 255, 0.15)",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: "#FFFFFF",
   },
   dateInput: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
     borderWidth: 1,
-    borderColor: "#FED7AA",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    borderColor: "rgba(255, 255, 255, 0.15)",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
   },
   dateText: {
-    fontSize: 14,
-    color: "#1C1917",
+    fontSize: 15,
+    color: "#FFFFFF",
   },
   placeholder: {
-    fontSize: 14,
-    color: "#B0A69A",
+    fontSize: 15,
+    color: "#a8998d",
   },
   textArea: {
-    minHeight: 80,
+    minHeight: 85,
     textAlignVertical: "top",
   },
   row: {
@@ -677,7 +722,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 16,
-    marginTop: 4,
+    marginTop: 6,
   },
   radioGroupWrap: {
     gap: 12,
@@ -692,37 +737,43 @@ const style = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "#FB923C",
+    borderColor: "#f97316",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 6,
+    marginRight: 8,
   },
   radioCircleSelected: {
-    borderColor: "#EA580C",
+    borderColor: "#f97316",
   },
   radioInnerDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#EA580C",
+    backgroundColor: "#f97316",
   },
   radioLabel: {
     fontSize: 14,
-    color: "#292524",
+    color: "#FFFFFF",
   },
   submitButton: {
-    backgroundColor: "#EA580C",
-    borderRadius: 10,
-    paddingVertical: 14,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 30,
+    paddingVertical: 16,
     alignItems: "center",
-    marginTop: 24,
+    marginTop: 28,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
   },
   submitButtonDisabled: {
     opacity: 0.6,
   },
   submitButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
+    color: "#1a0e08",
+    fontSize: 17,
+    fontWeight: "bold",
   },
 });
+

@@ -1,4 +1,8 @@
+import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { LinearGradient } from "expo-linear-gradient";
+import { Stack, router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -10,10 +14,12 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SectionHeader from "../components/FormComponents/SectionHeader";
+import SuccessModal from "../components/FormComponents/SuccessModal";
 
 // ----------------------------------------------------------------------------------
 // Types
@@ -221,6 +227,7 @@ const NewMembershipForm = () => {
   const [showDeclarationPicker, setShowDeclarationPicker] = useState(false);
   const [showPaymentDatePicker, setShowPaymentDatePicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const {
     control,
@@ -241,7 +248,7 @@ const NewMembershipForm = () => {
     try {
       const result = await submitMembershipApplication(data);
       console.log("Membership Form Submitted:", data, "API response:", result);
-      Alert.alert("Success", "Membership application submitted successfully.");
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Membership submission failed:", error);
       Alert.alert(
@@ -254,13 +261,37 @@ const NewMembershipForm = () => {
   };
 
   return (
-    <SafeAreaView style={style.container}>
-      <ScrollView
-        style={style.scrollContent}
-        contentContainerStyle={style.scrollContentContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={style.title}>Membership Application Form</Text>
+    <LinearGradient
+      colors={["#1b0c06", "#3e1607", "#8d340e", "#b84714"]}
+      locations={[0, 0.35, 0.75, 1.0]}
+      style={style.container}
+    >
+      <Stack.Screen options={{ headerShown: false }} />
+      <StatusBar style="light" />
+
+      <SuccessModal
+        visible={showSuccessModal}
+        formTitle="membership"
+        onClose={() => setShowSuccessModal(false)}
+      />
+
+      <SafeAreaView style={style.safeArea}>
+        <ScrollView
+          style={style.scrollContent}
+          contentContainerStyle={style.scrollContentContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Top Navigation */}
+          <View style={style.headerNav}>
+            <TouchableOpacity
+              style={style.backButton}
+              onPress={() => router.back()}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="chevron-back" size={20} color="#FFFFFF" />
+            </TouchableOpacity>
+            <Text style={style.title}>Membership Application Form</Text>
+          </View>
 
         {/* 1. Personal Details */}
         <SectionHeader title="1. Personal Details" />
@@ -831,13 +862,14 @@ const NewMembershipForm = () => {
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <ActivityIndicator color="#FFFFFF" />
+            <ActivityIndicator color="#1a0e08" />
           ) : (
             <Text style={style.submitButtonText}>Submit Application</Text>
           )}
         </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
@@ -850,62 +882,76 @@ export default NewMembershipForm;
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF7ED",
+  },
+  safeArea: {
+    flex: 1,
   },
   scrollContent: {
     flex: 1,
   },
   scrollContentContainer: {
-    padding: 16,
+    paddingHorizontal: 20,
+    paddingTop: 12,
     paddingBottom: 40,
   },
+  headerNav: {
+    marginBottom: 16,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.12)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
   title: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#7C2D12",
-    marginBottom: 12,
-    textAlign: "center",
+    fontSize: 26,
+    fontWeight: "800",
+    color: "#FFFFFF",
+    marginBottom: 4,
   },
   fieldLabel: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: "#78716C",
-    marginTop: 10,
-    marginBottom: 4,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#e2d5cd",
+    marginTop: 12,
+    marginBottom: 6,
   },
   errorText: {
     fontSize: 12,
-    color: "#DC2626",
+    color: "#f87171",
     marginTop: 4,
   },
   input: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
     borderWidth: 1,
-    borderColor: "#FED7AA",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: "#1C1917",
+    borderColor: "rgba(255, 255, 255, 0.15)",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: "#FFFFFF",
   },
   dateInput: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
     borderWidth: 1,
-    borderColor: "#FED7AA",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    borderColor: "rgba(255, 255, 255, 0.15)",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
   },
   dateText: {
-    fontSize: 14,
-    color: "#1C1917",
+    fontSize: 15,
+    color: "#FFFFFF",
   },
   placeholder: {
-    fontSize: 14,
-    color: "#B0A69A",
+    fontSize: 15,
+    color: "#a8998d",
   },
   textArea: {
-    minHeight: 80,
+    minHeight: 85,
     textAlignVertical: "top",
   },
   row: {
@@ -919,7 +965,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 16,
-    marginTop: 4,
+    marginTop: 6,
   },
   radioOption: {
     flexDirection: "row",
@@ -931,29 +977,29 @@ const style = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "#FB923C",
+    borderColor: "#f97316",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 6,
+    marginRight: 8,
   },
   radioCircleSelected: {
-    borderColor: "#EA580C",
+    borderColor: "#f97316",
   },
   radioInnerDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#EA580C",
+    backgroundColor: "#f97316",
   },
   radioLabel: {
     fontSize: 14,
-    color: "#292524",
+    color: "#FFFFFF",
   },
   declarationText: {
-    fontSize: 13,
-    color: "#57534E",
+    fontSize: 14,
+    color: "#d6c8be",
     lineHeight: 20,
-    marginBottom: 12,
+    marginBottom: 14,
   },
   checkboxRow: {
     flexDirection: "row",
@@ -963,16 +1009,16 @@ const style = StyleSheet.create({
   checkbox: {
     width: 20,
     height: 20,
-    borderRadius: 4,
+    borderRadius: 5,
     borderWidth: 2,
-    borderColor: "#FB923C",
+    borderColor: "#f97316",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 8,
+    marginRight: 10,
   },
   checkboxChecked: {
-    backgroundColor: "#EA580C",
-    borderColor: "#EA580C",
+    backgroundColor: "#f97316",
+    borderColor: "#f97316",
   },
   checkmark: {
     color: "#FFFFFF",
@@ -981,21 +1027,27 @@ const style = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: 14,
-    color: "#292524",
+    color: "#FFFFFF",
   },
   submitButton: {
-    backgroundColor: "#EA580C",
-    borderRadius: 10,
-    paddingVertical: 14,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 30,
+    paddingVertical: 16,
     alignItems: "center",
-    marginTop: 24,
+    marginTop: 28,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
   },
   submitButtonDisabled: {
     opacity: 0.6,
   },
   submitButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
+    color: "#1a0e08",
+    fontSize: 17,
+    fontWeight: "bold",
   },
 });
+

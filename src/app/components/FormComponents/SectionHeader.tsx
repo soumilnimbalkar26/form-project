@@ -12,15 +12,16 @@ export default SectionHeader;
 
 const style = StyleSheet.create({
   sectionHeaderWrapper: {
-    marginTop: 20,
-    marginBottom: 10,
+    marginTop: 24,
+    marginBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#FDBA74",
+    borderBottomColor: "rgba(249, 115, 22, 0.35)",
     paddingBottom: 6,
   },
   sectionHeaderText: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "700",
-    color: "#9A3412",
+    color: "#f97316",
   },
 });
+
